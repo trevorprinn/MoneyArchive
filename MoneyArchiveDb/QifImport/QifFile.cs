@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 namespace MoneyArchiveDb.QifImport {
     public class QifFile {
 
+        private QifFile() { }
+
         public QifTransaction[] Transactions { get; private set; }
         public string AccountName { get; private set; }
 
-        public void Load(TextReader qifReader, string accountName) {
+        public static QifFile Load(TextReader qifReader, string accountName) {
+            var file = new QifFile();
             // Ignore the first line
-            AccountName = accountName;
+            file.AccountName = accountName;
             qifReader.ReadLine();
             List<QifTransaction> trans = new();
             while (true) {
@@ -21,13 +24,14 @@ namespace MoneyArchiveDb.QifImport {
                 if (record.IsEmpty) break;
                 trans.Add(new QifTransaction(record));
             }
-            Transactions = trans.ToArray();
+            file.Transactions = trans.ToArray();
+            return file;
         }
 
-        public void Load(string file, string accountName = null) {
+        public static QifFile Load(string file, string accountName = null) {
             if (accountName == null) accountName = Path.GetFileNameWithoutExtension(file);
             using var reader = new StreamReader(file);
-            Load(reader, accountName);
+            return Load(reader, accountName);
         }
     }
 }

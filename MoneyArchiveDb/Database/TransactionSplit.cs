@@ -14,16 +14,19 @@ namespace MoneyArchiveDb.Database {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int TransactionId {  get; set; }
-        public virtual Transaction Transaction {  get; set; }
+        public int TransactionId { get; set; }
+        public virtual Transaction Transaction { get; set; }
 
         public int Order { get; set; }
 
-        public int? CategoryId {  get; set; }
-        public virtual Category Category {  get; set; }
+        public int? CategoryId { get; set; }
+        public virtual Category Category { get; set; }
 
-        public string Memo {  get; set; }
+        public int? TransferAccountId { get; set; }
+        public virtual Account TransferAccount { get; set; }
 
-        public decimal Amount {  get; set; }
+        public string Memo { get; set; }
+
+        public decimal Amount { get; set; }
     }
 }

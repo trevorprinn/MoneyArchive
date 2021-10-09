@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace MoneyArchiveDb.QifImport {
-    public class QifTransaction {
+	public class QifTransaction {
 		public DateTime Date { get; private set; }
 		public decimal Amount { get; private set; }
 		public char Status { get; private set; }
@@ -17,6 +17,7 @@ namespace MoneyArchiveDb.QifImport {
 
 		public class Split {
 			public string Category { get; internal set; }
+			public string Transfer { get; internal set; }
 			public string Memo { get; internal set; }
 			public decimal Amount { get; internal set; }
 		}
@@ -27,6 +28,7 @@ namespace MoneyArchiveDb.QifImport {
 
 			foreach (Field f in r.Fields) {
 				if (f is SplitCategory sc) splits.Add(currSplit = new Split { Category = sc.Value });
+				else if (f is SplitTransfer st) splits.Add(currSplit = new Split { Transfer = st.Value });
 				else if (f is SplitMemo sm) currSplit.Memo = sm.Value;
 				else if (f is SplitAmount sa) currSplit.Amount = sa.Value;
 				else if (f is DateField d) Date = d.Value;

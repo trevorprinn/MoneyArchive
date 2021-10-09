@@ -12,8 +12,8 @@ namespace MoneyArchiveDb.Database {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string Value { get;set;  }
+        public string Value { get; set; }
 
-        public virtual ICollection<Transaction> Transactions {  get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 
 namespace MoneyArchiveDb.QifImport {
-    public class QifRecord {
+	public class QifRecord {
 		List<Field> _fields = new();
 		public Field[] Fields => _fields.ToArray();
 

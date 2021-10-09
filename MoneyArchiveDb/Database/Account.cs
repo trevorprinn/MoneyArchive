@@ -10,7 +10,11 @@ namespace MoneyArchiveDb.Database {
     [Table("Account")]
     public class Account {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id {  get; set; }
-        public string Name {  get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public virtual ICollection<Transaction> Transactions { get; set; }
+
+        public virtual ICollection<Transaction> TransferTransactions { get; set; }
     }
 }

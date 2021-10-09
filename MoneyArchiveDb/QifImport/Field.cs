@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 
 namespace MoneyArchiveDb.QifImport {
-    public abstract class Field {
+	public abstract class Field {
 		public static Field Create(string line) {
 			string data = line.Substring(1);
 			if (string.IsNullOrWhiteSpace(line)) throw new Exception("Blank Line");
@@ -14,7 +14,7 @@ namespace MoneyArchiveDb.QifImport {
 				case 'N': return new ChequeNumberField(data);
 				case 'P': return new PayeeField(data);
 				case 'L': return data.StartsWith('[') ? new TransferField(data) : new CategoryField(data);
-				case 'S': return new SplitCategory(data);
+				case 'S': return data.StartsWith('[') ? new SplitTransfer(data) : new SplitCategory(data);
 				case 'E': return new SplitMemo(data);
 				case '$': return new SplitAmount(data);
 				default: throw new Exception($"Unknown Field Type {line[0]}");
@@ -61,7 +61,7 @@ namespace MoneyArchiveDb.QifImport {
 	class ClearedStatusField : Field {
 		public char Value { get; private set; }
 		public ClearedStatusField(string data) {
-			Value = string.IsNullOrWhiteSpace(data) ? ' ' : data[0];
+			Value = string.IsNullOrWhiteSpace(data) || data.Length == 0 || data[0] == 0 ? ' ' : data[0];
 		}
 	}
 
@@ -91,6 +91,10 @@ namespace MoneyArchiveDb.QifImport {
 
 	class SplitCategory : CategoryField {
 		public SplitCategory(string data) : base(data) { }
+	}
+
+	class SplitTransfer : TransferField {
+		public SplitTransfer(string data) : base(data) { }
 	}
 
 	class SplitMemo : MemoField {
