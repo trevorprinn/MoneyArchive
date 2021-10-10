@@ -75,5 +75,22 @@ namespace MoneyArchiveDb {
 
 		public static Task LoadQifDirectory(string connectionString, string qifDirectory) =>
 			Load(connectionString, Directory.GetFiles(qifDirectory, "*.qif"));
+
+		public static async Task MatchTransfers(string connectionString) {
+			using var cx = new ArchiveContext(connectionString);
+			foreach (var account in cx.Accounts) matchTransfers(cx, account);
+			await cx.SaveChangesAsync();
+        }
+
+		static void matchTransfers(ArchiveContext cx, Account account) {
+			var transfers = account.Transactions.Where(t => t.TransferAccountId != null && t.TransferMatchId == null);
+			foreach (var transfer in transfers) {
+				var match = transfer.TransferAccount.Transactions.FirstOrDefault(m => m.Date == transfer.Date && m.TransferAccountId == account.Id && m.Amount == -transfer.Amount);
+				if (match != null) {
+					transfer.TransferMatch = match;
+					match.TransferMatch = transfer;
+                }
+            }
+		}
 	}
 }

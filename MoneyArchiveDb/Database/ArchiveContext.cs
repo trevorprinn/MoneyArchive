@@ -33,5 +33,8 @@ namespace MoneyArchiveDb.Database {
             account.HasMany(a => a.Transactions).WithOne(t => t.Account).HasForeignKey(t => t.AccountId);
             account.HasMany(a => a.TransferTransactions).WithOne(t => t.TransferAccount).HasForeignKey(a => a.TransferAccountId);
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseLazyLoadingProxies();
     }
 }
