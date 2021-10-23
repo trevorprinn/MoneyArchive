@@ -72,11 +72,17 @@ namespace MoneyArchiveApp {
             loadTransactions(account.Transactions);
         }
 
+        TransactionItem[]? _currentTransactions;
+
         void loadTransactions(IEnumerable<Transaction> transactions) {
             var cursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
             try {
-                gridTransactions.DataSource = transactions.OrderBy(t => t.Date).Select(t => new TransactionItem(t)).SetRunningTotals();
+                gridTransactions.DataSource = null;
+                _currentTransactions = null;
+                textSearch.Text = null;
+                _currentTransactions = transactions.OrderBy(t => t.Date).Select(t => new TransactionItem(t)).SetRunningTotals();
+                gridTransactions.DataSource = _currentTransactions;
                 gridTransactions.AutoResizeColumns();
                 gridTransactions.Focus();
             } finally {
@@ -92,7 +98,17 @@ namespace MoneyArchiveApp {
             var splits = trans.Transaction.Splits;
             var lengths = new int[] { splits.Max(s => s.Category?.Value?.Length ?? 0), splits.Max(s => s.Amount.ToString().Length), splits.Max(s => s.Memo?.Length ?? 0) };
             var texts = splits.Select(s => $"{(s.Category?.Value ?? "").PadRight(lengths[0])} | {s.Amount.ToString().PadLeft(lengths[1])} | {(s.Memo ?? "").PadRight(lengths[2])}");
-            e.ToolTipText = string.Join("\r\n", texts);
+            e.ToolTipText = string.Join(Environment.NewLine, texts);
+        }
+
+        private void textSearch_TextChanged(object sender, EventArgs e) {
+            if (_currentTransactions == null) return;
+            var text = textSearch.Text?.ToLower();
+            if (string.IsNullOrEmpty(text)) {
+                gridTransactions.DataSource = _currentTransactions;
+            } else {
+                gridTransactions.DataSource = _currentTransactions.Where(t => t.ContainsText(text)).ToArray();
+            }
         }
     }
 
@@ -107,6 +123,10 @@ namespace MoneyArchiveApp {
         public string? Category => Transaction.Category?.Value;
         public decimal RunningTotal { get; set; }
         public bool HasSplit => Transaction.Splits?.Any() ?? false;
+
+        public bool ContainsText(string text) =>
+            (Transaction.Payee?.Name.ToLower().Contains(text) ?? false)
+            || (Transaction.Memo?.ToLower().Contains(text) ?? false);
 
         public TransactionItem(Transaction transaction) {
             Transaction = transaction;
