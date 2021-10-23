@@ -83,6 +83,17 @@ namespace MoneyArchiveApp {
                 Cursor.Current = cursor;
             }
         }
+
+        private void gridTransactions_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e) {
+            e.ToolTipText = null;
+            if (e.RowIndex < 0 || e.RowIndex >= gridTransactions.Rows.Count) return;
+            var trans = gridTransactions.Rows[e.RowIndex]?.DataBoundItem as TransactionItem;
+            if (!(trans?.Transaction.Splits?.Any() ?? false)) return;
+            var splits = trans.Transaction.Splits;
+            var lengths = new int[] { splits.Max(s => s.Category?.Value?.Length ?? 0), splits.Max(s => s.Amount.ToString().Length), splits.Max(s => s.Memo?.Length ?? 0) };
+            var texts = splits.Select(s => $"{(s.Category?.Value ?? "").PadRight(lengths[0])} | {s.Amount.ToString().PadLeft(lengths[1])} | {(s.Memo ?? "").PadRight(lengths[2])}");
+            e.ToolTipText = string.Join("\r\n", texts);
+        }
     }
 
     class TransactionItem {
@@ -95,6 +106,7 @@ namespace MoneyArchiveApp {
         public int? ChequeNumber => Transaction.ChequeNumber;
         public string? Category => Transaction.Category?.Value;
         public decimal RunningTotal { get; set; }
+        public bool HasSplit => Transaction.Splits?.Any() ?? false;
 
         public TransactionItem(Transaction transaction) {
             Transaction = transaction;

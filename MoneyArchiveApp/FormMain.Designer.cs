@@ -38,6 +38,7 @@
             this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HasSplit = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -86,7 +87,8 @@
             this.RunningTotal,
             this.Category,
             this.Transfer,
-            this.Memo});
+            this.Memo,
+            this.HasSplit});
             this.gridTransactions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridTransactions.Location = new System.Drawing.Point(0, 0);
             this.gridTransactions.Name = "gridTransactions";
@@ -94,6 +96,7 @@
             this.gridTransactions.RowTemplate.Height = 25;
             this.gridTransactions.Size = new System.Drawing.Size(676, 450);
             this.gridTransactions.TabIndex = 0;
+            this.gridTransactions.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.gridTransactions_CellToolTipTextNeeded);
             // 
             // dlgFolder
             // 
@@ -163,6 +166,15 @@
             this.Memo.Name = "Memo";
             this.Memo.ReadOnly = true;
             // 
+            // HasSplit
+            // 
+            this.HasSplit.DataPropertyName = "HasSplit";
+            this.HasSplit.HeaderText = "Split";
+            this.HasSplit.Name = "HasSplit";
+            this.HasSplit.ReadOnly = true;
+            this.HasSplit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.HasSplit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -194,5 +206,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Category;
         private System.Windows.Forms.DataGridViewTextBoxColumn Transfer;
         private System.Windows.Forms.DataGridViewTextBoxColumn Memo;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn HasSplit;
     }
 }
