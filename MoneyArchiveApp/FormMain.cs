@@ -1,26 +1,60 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MoneyArchiveDb;
 using MoneyArchiveDb.Database;
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace MoneyArchiveApp {
     public partial class FormMain : Form {
 
-        string connString => Program.Settings.ConnectionString;
+        readonly ArchiveDb _db;
+
+        readonly Settings _settings;
 
         public FormMain() {
             InitializeComponent();
+
+            _settings = Settings.Load();
+            var db = getDb(_settings.QifFolder);
+            if (db == null) Close();
+            _db = db!;
+        }
+
+        ArchiveDb? getDb(string? folder) {
+            ArchiveDb? db = null;
+            if (!string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder)) {
+                try {
+                    db = DbLoader.LoadQifDirectory(folder);
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "Failed to load", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            if (db != null) return db;
+            dlgFolder.SelectedPath = _settings.QifFolder;
+            if (dlgFolder.ShowDialog() == DialogResult.OK) {
+                try {
+                    db = DbLoader.LoadQifDirectory(dlgFolder.SelectedPath);
+                    _settings.QifFolder = dlgFolder.SelectedPath;
+                    _settings.Save();
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "Failed to load", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            return db;
         }
 
         protected override void OnLoad(EventArgs e) {
             base.OnLoad(e);
 
             gridTransactions.AutoGenerateColumns = false;
+            loadUI();
+        }
 
-            using var cx = new ArchiveContext(connString);
-            listAccounts.DataSource = cx.Accounts.OrderBy(a => a.Name).Select(a => new AccountItem(a)).ToArray();
+        void loadUI() {
+            gridTransactions.DataSource = null;
+            listAccounts.DataSource = _db.Accounts.OrderBy(a => a.Name).Select(a => new AccountItem(a)).ToArray();
         }
 
         class AccountItem {
@@ -34,13 +68,7 @@ namespace MoneyArchiveApp {
         private void listAccounts_SelectedIndexChanged(object sender, EventArgs e) {
             Account? account = (listAccounts.SelectedItem as AccountItem)?.Account;
             if (account == null) return;
-            using var cx = new ArchiveContext(connString);
-            var data = cx.Transactions.Where(t => t.AccountId == account.Id)
-                .OrderBy(t => t.Date)
-                .Include(t => t.Payee).Include(t => t.Category).Include(t => t.TransferAccount)
-                .Select(t => new TransactionItem(t))
-                .ToArray();
-            gridTransactions.DataSource = data;
+            gridTransactions.DataSource = account.Transactions.OrderBy(t => t.Date).Select(t => new TransactionItem(t)).ToArray();
         }
 
         class TransactionItem {

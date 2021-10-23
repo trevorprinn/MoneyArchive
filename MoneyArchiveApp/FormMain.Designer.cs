@@ -31,6 +31,7 @@
             this.Payee = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -114,6 +115,12 @@
             this.Transfer.Name = "Transfer";
             this.Transfer.ReadOnly = true;
             // 
+            // dlgFolder
+            // 
+            this.dlgFolder.Description = "Select the Qif Folder";
+            this.dlgFolder.ShowNewFolderButton = false;
+            this.dlgFolder.UseDescriptionForTitle = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -140,5 +147,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Payee;
         private System.Windows.Forms.DataGridViewTextBoxColumn Amount;
         private System.Windows.Forms.DataGridViewTextBoxColumn Transfer;
+        private System.Windows.Forms.FolderBrowserDialog dlgFolder;
     }
 }

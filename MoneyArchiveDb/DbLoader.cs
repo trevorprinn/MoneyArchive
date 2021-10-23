@@ -10,76 +10,87 @@ using System.Threading.Tasks;
 namespace MoneyArchiveDb {
     public static class DbLoader {
 
-        public static async Task Load(string connectionString, params QifFile[] qifs) {
-            using var cx = new ArchiveContext(connectionString);
-            await cx.Database.EnsureCreatedAsync();
+        public static ArchiveDb Load(params QifFile[] qifs) {
+            var db = new ArchiveDb {
+                Accounts = qifs.Select(q => new Account(q.AccountName)).ToArray()
+            };
 
-            if (cx.Accounts.Any() || cx.Categories.Any() || cx.Transactions.Any() || cx.Payees.Any()) throw new Exception("Database is not empty");
-
-			var payees = new Dictionary<string, Payee>();
-			var cats = new Dictionary<string, Category>();
-
-			var accounts = qifs.Select(q => new Account { Name = q.AccountName }).ToArray();
-			cx.Accounts.AddRange(accounts);
-
-			var transactions = new List<Transaction>();
-
-			foreach (var qif in qifs) {
-				var account = accounts.Single(a => a.Name == qif.AccountName);
-				foreach (var t in qif.Transactions) {
+            foreach (var qif in qifs) {
+				var account = db.Accounts.Single(a => a.Name == qif.AccountName);
+				foreach (var qt in qif.Transactions) {
 					var sorder = 0;
-					transactions.Add(new Transaction {
-						Account = account,
-						Amount = t.Amount,
-						Category = getCat(t.Category),
-						ChequeNumber = t.ChequeNumber,
-						Date = t.Date,
-						Memo = t.Memo,
-						Payee = getPayee(t.Payee),
-						Status = t.Status == 0 ? ' ' : t.Status,
-						Splits = t.Splits?.Select(s => new TransactionSplit {
-							Amount = s.Amount,
-							Category = getCat(s.Category),
-							TransferAccount = !string.IsNullOrWhiteSpace(s.Transfer) ? accounts.SingleOrDefault(a => a.Name == s.Transfer) : null,
-							Memo = s.Memo,
-							Order = sorder++
-						}).ToArray(),
-						TransferAccount = !string.IsNullOrWhiteSpace(t.Transfer) ? accounts.SingleOrDefault(a => a.Name == t.Transfer) : null,
-						TransType = t.TransType
-					});
+                    var t = Transaction.Create();
+
+                    t.Account = account;
+                    t.AccountId = account.Id;
+                    t.Account.Transactions.Add(t);
+
+                    t.Amount = qt.Amount;
+
+                    t.Category = getCat(qt.Category);
+                    t.CategoryId = t.Category?.Id;
+                    t.Category?.Transactions.Add(t);
+
+                    t.ChequeNumber = qt.ChequeNumber;
+                    t.Date = qt.Date;
+                    t.Memo = qt.Memo;
+
+                    t.Payee = getPayee(qt.Payee);
+                    t.PayeeId = t.Payee?.Id;
+                    t.Payee?.Transactions.Add(t);
+
+                    t.Status = qt.Status == 0 ? ' ' : qt.Status;
+                    t.Splits = qt.Splits?.Select(s => {
+                        var cat = getCat(s.Category);
+                        var tacc = !string.IsNullOrWhiteSpace(s.Transfer) ? db.Accounts.SingleOrDefault(a => a.Name == s.Transfer) : null;
+                        var sp = new TransactionSplit {
+                            Amount = s.Amount,
+                            Category = cat,
+                            CategoryId = cat?.Id,
+                            TransferAccount = tacc,
+                            TransferAccountId = tacc?.Id,
+                            Memo = s.Memo,
+                            Order = sorder++
+                        };
+                        return sp;
+                    }).ToArray();
+
+                    t.TransferAccount = !string.IsNullOrWhiteSpace(qt.Transfer) ? db.Accounts.SingleOrDefault(a => a.Name == qt.Transfer) : null;
+                    t.TransferAccountId = t.TransferAccount?.Id;
+                    t.TransferAccount?.TransferTransactions.Add(t);
+                    
+                    t.TransType = qt.TransType;
+
+                    db.Transactions.Add(t);
 				}
 			}
-			cx.Transactions.AddRange(transactions);
-			await cx.SaveChangesAsync();
+            matchTransfers(db);
+            return db;
 
 			Payee getPayee(string n) {
 				if (string.IsNullOrWhiteSpace(n)) return null;
-				if (payees.TryGetValue(n, out Payee p)) return p;
-				var payee = new Payee { Name = n };
-				payees.Add(n, payee);
+                var payee = db.Payees.SingleOrDefault(p => p.Name == n);
+                if (payee == null) db.Payees.Add(payee = new Payee(n));
 				return payee;
 			}
 			Category getCat(string v) {
 				if (string.IsNullOrWhiteSpace(v)) return null;
-				if (cats.TryGetValue(v, out Category c)) return c;
-				var cat = new Category { Value = v };
-				cats.Add(v, cat);
+                var cat = db.Categories.SingleOrDefault(c => c.Value == v);
+                if (cat == null) db.Categories.Add(cat = new Category(v));
 				return cat;
 			}
 		}
 
-		public static Task Load(string connectionString, params string[] qifFilenames) {
+		public static ArchiveDb Load(params string[] qifFilenames) {
 			var qifs = qifFilenames.Select(f => QifFile.Load(f)).ToArray();
-			return Load(connectionString, qifs);
+			return Load(qifs);
 		}
 
-		public static Task LoadQifDirectory(string connectionString, string qifDirectory) =>
-			Load(connectionString, Directory.GetFiles(qifDirectory, "*.qif"));
+		public static ArchiveDb LoadQifDirectory(string qifDirectory) =>
+			Load(Directory.GetFiles(Environment.ExpandEnvironmentVariables(qifDirectory), "*.qif"));
 
-		public static async Task MatchTransfers(string connectionString) {
-			using var cx = new ArchiveContext(connectionString);
-			foreach (var account in cx.Accounts) matchTransfers(account);
-			await cx.SaveChangesAsync();
+		static void matchTransfers(ArchiveDb db) {
+			foreach (var account in db.Accounts) matchTransfers(account);
         }
 
 		static void matchTransfers(Account account) {
@@ -89,6 +100,8 @@ namespace MoneyArchiveDb {
 				if (match != null) {
 					transfer.TransferMatch = match;
 					match.TransferMatch = transfer;
+                    transfer.TransferMatchId = match.Id;
+                    match.TransferMatchId = transfer.Id;
                 }
             }
 		}

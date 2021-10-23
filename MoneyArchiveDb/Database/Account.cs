@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MoneyArchiveDb.Database {
-    [Table("Account")]
     public class Account {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        static int _nextId = 1;
+
+        public Account(string name) {
+            Id = _nextId++;
+            Name = name;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; } = new();
 
-        public virtual ICollection<Transaction> TransferTransactions { get; set; }
+        public List<Transaction> TransferTransactions { get; set; } = new();
     }
 }

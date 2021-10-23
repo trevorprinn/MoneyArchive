@@ -1,17 +1,14 @@
+using MoneyArchiveDb;
+using MoneyArchiveDb.Database;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MoneyArchiveApp {
     internal static class Program {
-
-        internal static Settings Settings { get; private set; }
-
-        static Program() {
-            Settings = Settings.Load();
-        }
 
         /// <summary>
         ///  The main entry point for the application.

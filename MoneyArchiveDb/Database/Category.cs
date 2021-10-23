@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MoneyArchiveDb.Database {
-    [Table("Category")]
     public class Category {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        static int _nextId = 1;
+
+        public Category(string value) {
+            Id = _nextId++;
+            Value = value;
+        }
         public int Id { get; set; }
 
         public string Value { get; set; }
 
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; } = new();
     }
 }
