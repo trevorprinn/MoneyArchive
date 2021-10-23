@@ -4,28 +4,28 @@ using System.Text.RegularExpressions;
 namespace MoneyArchiveDb.QifImport {
 	public abstract class Field {
 		public static Field Create(string line) {
-			string data = line.Substring(1);
+			string data = line[1..];
 			if (string.IsNullOrWhiteSpace(line)) throw new Exception("Blank Line");
-			switch (line[0]) {
-				case 'D': return new DateField(data);
-				case 'T': case 'U': return new AmountField(data);
-				case 'M': return new MemoField(data);
-				case 'C': return new ClearedStatusField(data);
-				case 'N': return new ChequeNumberField(data);
-				case 'P': return new PayeeField(data);
-				case 'L': return data.StartsWith('[') ? new TransferField(data) : new CategoryField(data);
-				case 'S': return data.StartsWith('[') ? new SplitTransfer(data) : new SplitCategory(data);
-				case 'E': return new SplitMemo(data);
-				case '$': return new SplitAmount(data);
-				default: throw new Exception($"Unknown Field Type {line[0]}");
-			}
-		}
+            return line[0] switch {
+                'D' => new DateField(data),
+                'T' or 'U' => new AmountField(data),
+                'M' => new MemoField(data),
+                'C' => new ClearedStatusField(data),
+                'N' => new ChequeNumberField(data),
+                'P' => new PayeeField(data),
+                'L' => data.StartsWith('[') ? new TransferField(data) : new CategoryField(data),
+                'S' => data.StartsWith('[') ? new SplitTransfer(data) : new SplitCategory(data),
+                'E' => new SplitMemo(data),
+                '$' => new SplitAmount(data),
+                _ => throw new Exception($"Unknown Field Type {line[0]}"),
+            };
+        }
 	}
 
 	class DateField : Field {
 		public DateTime Value { get; private set; }
 
-		static Regex _date = new Regex(@"(?'day'^\d{1,2})/(?'month'\d{1,2})(?'cent'/|')(?'year'\d\d)$");
+		static readonly Regex _date = new(@"(?'day'^\d{1,2})/(?'month'\d{1,2})(?'cent'/|')(?'year'\d\d)$");
 
 		public DateField(string data) {
 			var m = _date.Match(data);
@@ -85,7 +85,7 @@ namespace MoneyArchiveDb.QifImport {
 	class TransferField : StringField {
 		public TransferField(string data) : base(null) {
 			if (!data.StartsWith('[') || !data.EndsWith(']')) throw new Exception($"Invalid transfer account name: '{data}'");
-			Value = data.Substring(1, data.Length - 2);
+			Value = data[1..^1];
 		}
 	}
 

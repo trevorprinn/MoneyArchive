@@ -1,0 +1,15 @@
+# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
+
+# All files
+[*]
+indent_style = space
+
+# Xml files
+[*.xml]
+indent_size = 2
+
+# C# naming
+dotnet_naming_rule.private_lower_case.severity = suggestion
+dotnet_naming_rule.private_lower_case.applicable_kinds = property,method,field,event
+dotnet_naming_rule.private_lower_case.applicable_accessibilities = private
+dotnet_naming_rule.private_lower_case.capitalization = camel_case

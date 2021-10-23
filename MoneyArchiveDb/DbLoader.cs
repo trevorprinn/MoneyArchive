@@ -78,11 +78,11 @@ namespace MoneyArchiveDb {
 
 		public static async Task MatchTransfers(string connectionString) {
 			using var cx = new ArchiveContext(connectionString);
-			foreach (var account in cx.Accounts) matchTransfers(cx, account);
+			foreach (var account in cx.Accounts) matchTransfers(account);
 			await cx.SaveChangesAsync();
         }
 
-		static void matchTransfers(ArchiveContext cx, Account account) {
+		static void matchTransfers(Account account) {
 			var transfers = account.Transactions.Where(t => t.TransferAccountId != null && t.TransferMatchId == null);
 			foreach (var transfer in transfers) {
 				var match = transfer.TransferAccount.Transactions.FirstOrDefault(m => m.Date == transfer.Date && m.TransferAccountId == account.Id && m.Amount == -transfer.Amount);

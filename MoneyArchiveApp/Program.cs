@@ -6,6 +6,13 @@ using System.Windows.Forms;
 
 namespace MoneyArchiveApp {
     internal static class Program {
+
+        internal static Settings Settings { get; private set; }
+
+        static Program() {
+            Settings = Settings.Load();
+        }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

@@ -14,10 +14,11 @@ namespace MoneyArchiveDb.QifImport {
         public string AccountName { get; private set; }
 
         public static QifFile Load(TextReader qifReader, string accountName) {
-            var file = new QifFile();
+            var file = new QifFile {
+                AccountName = accountName
+            };
             // Ignore the first line
-            file.AccountName = accountName;
-            qifReader.ReadLine();
+            _ = qifReader.ReadLine();
             List<QifTransaction> trans = new();
             while (true) {
                 var record = new QifRecord(qifReader);

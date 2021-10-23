@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace MoneyArchiveApp {
     public partial class FormMain : Form {
 
-        string connString = "Data Source=10.17.23.2;Database=MoneyArchive;User Id=sa;Password=autoluck;MultipleActiveResultSets=true";
+        string connString => Program.Settings.ConnectionString;
 
         public FormMain() {
             InitializeComponent();
