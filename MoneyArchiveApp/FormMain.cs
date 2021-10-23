@@ -1,6 +1,7 @@
 ﻿using MoneyArchiveDb;
 using MoneyArchiveDb.Database;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -68,20 +69,47 @@ namespace MoneyArchiveApp {
         private void listAccounts_SelectedIndexChanged(object sender, EventArgs e) {
             Account? account = (listAccounts.SelectedItem as AccountItem)?.Account;
             if (account == null) return;
-            gridTransactions.DataSource = account.Transactions.OrderBy(t => t.Date).Select(t => new TransactionItem(t)).ToArray();
+            loadTransactions(account.Transactions);
         }
 
-        class TransactionItem {
-            public Transaction Transaction {  get; private set; }
-            public DateTime Date => Transaction.Date;
-            public string? Payee => Transaction.Payee?.Name;
-            public decimal Amount => Transaction.Amount;
-            public string? Transfer => Transaction.TransferAccount?.Name;
-
-            public TransactionItem(Transaction transaction) {
-                Transaction = transaction;
+        void loadTransactions(IEnumerable<Transaction> transactions) {
+            var cursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            try {
+                gridTransactions.DataSource = transactions.OrderBy(t => t.Date).Select(t => new TransactionItem(t)).SetRunningTotals();
+                gridTransactions.AutoResizeColumns();
+                gridTransactions.Focus();
+            } finally {
+                Cursor.Current = cursor;
             }
+        }
+    }
 
+    class TransactionItem {
+        public Transaction Transaction { get; private set; }
+        public DateTime Date => Transaction.Date;
+        public string? Payee => Transaction.Payee?.Name;
+        public decimal Amount => Transaction.Amount;
+        public string? Transfer => Transaction.TransferAccount?.Name;
+        public string? Memo => Transaction.Memo;
+        public int? ChequeNumber => Transaction.ChequeNumber;
+        public string? Category => Transaction.Category?.Value;
+        public decimal RunningTotal { get; set; }
+
+        public TransactionItem(Transaction transaction) {
+            Transaction = transaction;
+        }
+    }
+
+    static class TransactionItemExtensions {
+        public static TransactionItem[] SetRunningTotals(this IEnumerable<TransactionItem> items) {
+            decimal tot = 0m;
+            var aitems = items.ToArray();
+            foreach (var item in aitems) {
+                tot += item.Amount;
+                item.RunningTotal = tot;
+            }
+            return aitems;
         }
     }
 }

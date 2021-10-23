@@ -24,14 +24,20 @@
         /// </summary>
         private void InitializeComponent() {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listAccounts = new System.Windows.Forms.ListBox();
             this.gridTransactions = new System.Windows.Forms.DataGridView();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.ChequeNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Payee = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RunningTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -53,7 +59,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.gridTransactions);
             this.splitContainer1.Size = new System.Drawing.Size(800, 450);
-            this.splitContainer1.SplitterDistance = 266;
+            this.splitContainer1.SplitterDistance = 120;
             this.splitContainer1.TabIndex = 0;
             // 
             // listAccounts
@@ -63,7 +69,7 @@
             this.listAccounts.ItemHeight = 15;
             this.listAccounts.Location = new System.Drawing.Point(0, 0);
             this.listAccounts.Name = "listAccounts";
-            this.listAccounts.Size = new System.Drawing.Size(266, 450);
+            this.listAccounts.Size = new System.Drawing.Size(120, 450);
             this.listAccounts.TabIndex = 0;
             this.listAccounts.SelectedIndexChanged += new System.EventHandler(this.listAccounts_SelectedIndexChanged);
             // 
@@ -73,17 +79,36 @@
             this.gridTransactions.AllowUserToDeleteRows = false;
             this.gridTransactions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridTransactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ChequeNumber,
             this.Date,
             this.Payee,
             this.Amount,
-            this.Transfer});
+            this.RunningTotal,
+            this.Category,
+            this.Transfer,
+            this.Memo});
             this.gridTransactions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridTransactions.Location = new System.Drawing.Point(0, 0);
             this.gridTransactions.Name = "gridTransactions";
             this.gridTransactions.ReadOnly = true;
             this.gridTransactions.RowTemplate.Height = 25;
-            this.gridTransactions.Size = new System.Drawing.Size(530, 450);
+            this.gridTransactions.Size = new System.Drawing.Size(676, 450);
             this.gridTransactions.TabIndex = 0;
+            // 
+            // dlgFolder
+            // 
+            this.dlgFolder.Description = "Select the Qif Folder";
+            this.dlgFolder.ShowNewFolderButton = false;
+            this.dlgFolder.UseDescriptionForTitle = true;
+            // 
+            // ChequeNumber
+            // 
+            this.ChequeNumber.DataPropertyName = "ChequeNumber";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.ChequeNumber.DefaultCellStyle = dataGridViewCellStyle1;
+            this.ChequeNumber.HeaderText = "Cheque";
+            this.ChequeNumber.Name = "ChequeNumber";
+            this.ChequeNumber.ReadOnly = true;
             // 
             // Date
             // 
@@ -102,11 +127,27 @@
             // Amount
             // 
             this.Amount.DataPropertyName = "Amount";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Amount.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Amount.DefaultCellStyle = dataGridViewCellStyle2;
             this.Amount.HeaderText = "Amount";
             this.Amount.Name = "Amount";
             this.Amount.ReadOnly = true;
+            // 
+            // RunningTotal
+            // 
+            this.RunningTotal.DataPropertyName = "RunningTotal";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.RunningTotal.DefaultCellStyle = dataGridViewCellStyle3;
+            this.RunningTotal.HeaderText = "Total";
+            this.RunningTotal.Name = "RunningTotal";
+            this.RunningTotal.ReadOnly = true;
+            // 
+            // Category
+            // 
+            this.Category.DataPropertyName = "Category";
+            this.Category.HeaderText = "Category";
+            this.Category.Name = "Category";
+            this.Category.ReadOnly = true;
             // 
             // Transfer
             // 
@@ -115,11 +156,12 @@
             this.Transfer.Name = "Transfer";
             this.Transfer.ReadOnly = true;
             // 
-            // dlgFolder
+            // Memo
             // 
-            this.dlgFolder.Description = "Select the Qif Folder";
-            this.dlgFolder.ShowNewFolderButton = false;
-            this.dlgFolder.UseDescriptionForTitle = true;
+            this.Memo.DataPropertyName = "Memo";
+            this.Memo.HeaderText = "Memo";
+            this.Memo.Name = "Memo";
+            this.Memo.ReadOnly = true;
             // 
             // FormMain
             // 
@@ -143,10 +185,14 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox listAccounts;
         private System.Windows.Forms.DataGridView gridTransactions;
+        private System.Windows.Forms.FolderBrowserDialog dlgFolder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ChequeNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn Payee;
         private System.Windows.Forms.DataGridViewTextBoxColumn Amount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RunningTotal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Category;
         private System.Windows.Forms.DataGridViewTextBoxColumn Transfer;
-        private System.Windows.Forms.FolderBrowserDialog dlgFolder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Memo;
     }
 }
