@@ -31,7 +31,7 @@ namespace MoneyArchiveDb.QifImport {
 
         public static QifFile Load(string file, string accountName = null) {
             if (accountName == null) accountName = Path.GetFileNameWithoutExtension(file);
-            using var reader = new StreamReader(file);
+            using var reader = new StreamReader(file, Encoding.Latin1);
             return Load(reader, accountName);
         }
     }
