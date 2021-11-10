@@ -25,23 +25,25 @@
         private void InitializeComponent() {
             System.Windows.Forms.Panel panel1;
             System.Windows.Forms.Label label1;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.textSearch = new System.Windows.Forms.TextBox();
             this.gridTransactions = new System.Windows.Forms.DataGridView();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.cboListType = new System.Windows.Forms.ComboBox();
+            this.listSelection = new System.Windows.Forms.ListBox();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.ChequeNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Payee = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RunningTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HasSplit = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listAccounts = new System.Windows.Forms.ListBox();
-            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             panel1 = new System.Windows.Forms.Panel();
             label1 = new System.Windows.Forms.Label();
             panel1.SuspendLayout();
@@ -60,7 +62,7 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(676, 450);
+            panel1.Size = new System.Drawing.Size(673, 450);
             panel1.TabIndex = 1;
             // 
             // textSearch
@@ -69,7 +71,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textSearch.Location = new System.Drawing.Point(54, 2);
             this.textSearch.Name = "textSearch";
-            this.textSearch.Size = new System.Drawing.Size(622, 23);
+            this.textSearch.Size = new System.Drawing.Size(619, 23);
             this.textSearch.TabIndex = 2;
             this.textSearch.TextChanged += new System.EventHandler(this.textSearch_TextChanged);
             // 
@@ -94,6 +96,7 @@
             this.ChequeNumber,
             this.Date,
             this.Payee,
+            this.Account,
             this.Amount,
             this.RunningTotal,
             this.Category,
@@ -103,16 +106,67 @@
             this.gridTransactions.Location = new System.Drawing.Point(0, 29);
             this.gridTransactions.Name = "gridTransactions";
             this.gridTransactions.ReadOnly = true;
+            this.gridTransactions.RowHeadersVisible = false;
             this.gridTransactions.RowTemplate.Height = 25;
-            this.gridTransactions.Size = new System.Drawing.Size(676, 421);
+            this.gridTransactions.Size = new System.Drawing.Size(673, 421);
             this.gridTransactions.TabIndex = 0;
             this.gridTransactions.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.gridTransactions_CellToolTipTextNeeded);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.cboListType);
+            this.splitContainer1.Panel1.Controls.Add(this.listSelection);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(panel1);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
+            this.splitContainer1.SplitterDistance = 123;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // cboListType
+            // 
+            this.cboListType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboListType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboListType.FormattingEnabled = true;
+            this.cboListType.Location = new System.Drawing.Point(3, 5);
+            this.cboListType.Name = "cboListType";
+            this.cboListType.Size = new System.Drawing.Size(118, 23);
+            this.cboListType.TabIndex = 1;
+            this.cboListType.SelectedIndexChanged += new System.EventHandler(this.cboListType_SelectedIndexChanged);
+            // 
+            // listSelection
+            // 
+            this.listSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listSelection.FormattingEnabled = true;
+            this.listSelection.IntegralHeight = false;
+            this.listSelection.ItemHeight = 15;
+            this.listSelection.Location = new System.Drawing.Point(0, 31);
+            this.listSelection.Name = "listSelection";
+            this.listSelection.Size = new System.Drawing.Size(123, 419);
+            this.listSelection.TabIndex = 0;
+            this.listSelection.SelectedIndexChanged += new System.EventHandler(this.listSelection_SelectedIndexChanged);
+            // 
+            // dlgFolder
+            // 
+            this.dlgFolder.Description = "Select the Qif Folder";
+            this.dlgFolder.ShowNewFolderButton = false;
+            this.dlgFolder.UseDescriptionForTitle = true;
             // 
             // ChequeNumber
             // 
             this.ChequeNumber.DataPropertyName = "ChequeNumber";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.ChequeNumber.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.ChequeNumber.DefaultCellStyle = dataGridViewCellStyle1;
             this.ChequeNumber.HeaderText = "Cheque";
             this.ChequeNumber.Name = "ChequeNumber";
             this.ChequeNumber.ReadOnly = true;
@@ -131,11 +185,18 @@
             this.Payee.Name = "Payee";
             this.Payee.ReadOnly = true;
             // 
+            // Account
+            // 
+            this.Account.DataPropertyName = "Account";
+            this.Account.HeaderText = "Account";
+            this.Account.Name = "Account";
+            this.Account.ReadOnly = true;
+            // 
             // Amount
             // 
             this.Amount.DataPropertyName = "Amount";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Amount.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Amount.DefaultCellStyle = dataGridViewCellStyle2;
             this.Amount.HeaderText = "Amount";
             this.Amount.Name = "Amount";
             this.Amount.ReadOnly = true;
@@ -143,8 +204,8 @@
             // RunningTotal
             // 
             this.RunningTotal.DataPropertyName = "RunningTotal";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.RunningTotal.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.RunningTotal.DefaultCellStyle = dataGridViewCellStyle3;
             this.RunningTotal.HeaderText = "Total";
             this.RunningTotal.Name = "RunningTotal";
             this.RunningTotal.ReadOnly = true;
@@ -179,40 +240,6 @@
             this.HasSplit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.HasSplit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.listAccounts);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
-            this.splitContainer1.SplitterDistance = 120;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // listAccounts
-            // 
-            this.listAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listAccounts.FormattingEnabled = true;
-            this.listAccounts.ItemHeight = 15;
-            this.listAccounts.Location = new System.Drawing.Point(0, 0);
-            this.listAccounts.Name = "listAccounts";
-            this.listAccounts.Size = new System.Drawing.Size(120, 450);
-            this.listAccounts.TabIndex = 0;
-            this.listAccounts.SelectedIndexChanged += new System.EventHandler(this.listAccounts_SelectedIndexChanged);
-            // 
-            // dlgFolder
-            // 
-            this.dlgFolder.Description = "Select the Qif Folder";
-            this.dlgFolder.ShowNewFolderButton = false;
-            this.dlgFolder.UseDescriptionForTitle = true;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -235,18 +262,20 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListBox listAccounts;
+        private System.Windows.Forms.ListBox listSelection;
         private System.Windows.Forms.DataGridView gridTransactions;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
+        private System.Windows.Forms.TextBox textSearch;
+        private System.Windows.Forms.ComboBox cboListType;
         private System.Windows.Forms.DataGridViewTextBoxColumn ChequeNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn Payee;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Account;
         private System.Windows.Forms.DataGridViewTextBoxColumn Amount;
         private System.Windows.Forms.DataGridViewTextBoxColumn RunningTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn Category;
         private System.Windows.Forms.DataGridViewTextBoxColumn Transfer;
         private System.Windows.Forms.DataGridViewTextBoxColumn Memo;
         private System.Windows.Forms.DataGridViewCheckBoxColumn HasSplit;
-        private System.Windows.Forms.TextBox textSearch;
     }
 }
