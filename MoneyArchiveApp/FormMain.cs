@@ -15,7 +15,7 @@ namespace MoneyArchiveApp {
         readonly Settings _settings;
 
         internal enum SelectionTypes {
-            Accounts = 0, Payees = 1, Categories = 2
+            Accounts = 0, Payees = 1, Categories = 2, All = 3
         }
 
         public FormMain() {
@@ -143,6 +143,7 @@ namespace MoneyArchiveApp {
         SelectionTypes selType => (SelectionTypes)cboListType.SelectedIndex;
 
         private void cboListType_SelectedIndexChanged(object sender, EventArgs e) {
+            listSelection.Enabled = selType != SelectionTypes.All;
             switch (selType) {
                 case SelectionTypes.Accounts:
                     listSelection.DataSource = _db.Accounts.OrderBy(a => a.Name).Select(a => new AccountItem(a)).ToArray();
@@ -152,6 +153,10 @@ namespace MoneyArchiveApp {
                     break;
                 case SelectionTypes.Payees:
                     listSelection.DataSource = _db.Payees.OrderBy(p => p.Name).Select(p => new PayeeItem(p)).ToArray();
+                    break;
+                case SelectionTypes.All:
+                    listSelection.DataSource = null;
+                    loadTransactions(_db.Transactions);
                     break;
                 default:
                     listSelection.DataSource = null;
@@ -177,19 +182,17 @@ namespace MoneyArchiveApp {
         public bool ContainsText(FormMain.SelectionTypes selType, string text) =>
             selType switch {
                 FormMain.SelectionTypes.Accounts =>
-                    (Transaction.Payee?.Name.ToLower().Contains(text) ?? false)
-                    || (Transaction.Category?.Value.ToLower().Contains(text) ?? false)
-                    || (Transaction.Memo?.ToLower().Contains(text) ?? false),
+                    check(text, Transaction.Payee?.Name, Transaction.Category?.Value, Transaction.Memo),
                 FormMain.SelectionTypes.Categories =>
-                    (Transaction.Payee?.Name.ToLower().Contains(text) ?? false)
-                    || (Transaction.Account?.Name.ToLower().Contains(text) ?? false)
-                    || (Transaction.Memo?.ToLower().Contains(text) ?? false),
+                    check(text, Transaction.Payee?.Name, Transaction.Account?.Name, Transaction.Memo),
                 FormMain.SelectionTypes.Payees =>
-                    (Transaction.Account?.Name.ToLower().Contains(text) ?? false)
-                    || (Transaction.Category?.Value.ToLower().Contains(text) ?? false)
-                    || (Transaction.Memo?.ToLower().Contains(text) ?? false),
+                    check(text, Transaction.Account?.Name, Transaction.Category?.Value, Transaction.Memo),
+                FormMain.SelectionTypes.All =>
+                    check(text, Transaction.Account?.Name, Transaction.Payee?.Name, Transaction.Category?.Value, Transaction.Memo),
                 _ => false
             };
+
+        bool check(string search, params string?[] data) => data.Any(d => d?.ToLower().Contains(search) ?? false);
 
         public TransactionItem(Transaction transaction) {
             Transaction = transaction;
