@@ -194,7 +194,7 @@ namespace MoneyArchiveApp {
                 var transaction = (gridTransactions.Rows[e.RowIndex]?.DataBoundItem as TransactionItem)?.Transaction;
                 if (transaction?.TransferMatch == null) return;
                 var account = transaction.TransferAccount;
-                var ix = account.Transactions.IndexOf(transaction.TransferMatch);
+                var ix = account.Transactions.OrderBy(t => t.Date).ToList().IndexOf(transaction.TransferMatch);
                 textSearch.Text = null;
                 listSelection.SelectedItem = listSelection.Items.OfType<AccountItem>().FirstOrDefault(ai => ai.Account == account);
                 gridTransactions.CurrentCell = gridTransactions.Rows[ix].Cells[0];
