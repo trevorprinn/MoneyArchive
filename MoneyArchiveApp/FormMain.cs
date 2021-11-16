@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace MoneyArchiveApp {
     public partial class FormMain : Form {
 
-        readonly ArchiveDb _db;
+        ArchiveDb _db;
 
         readonly Settings _settings;
 
@@ -168,6 +168,24 @@ namespace MoneyArchiveApp {
                     break;
             }
             if (listSelection.Items.Count > 0) listSelection.SelectedIndex = 0;
+        }
+
+        private void menuFileExit_Click(object sender, EventArgs e) {
+            Close();
+        }
+
+        private void menuFileOpen_Click(object sender, EventArgs e) {
+            ArchiveDb? db;
+            if ((db = getDb(null)) != null) {
+                _db = db;
+                cboListType.SelectedIndex = -1;
+                cboListType.SelectedIndex = (int)SelectionTypes.Accounts;
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+            using var f = new FormAbout();
+            f.ShowDialog();
         }
     }
 
