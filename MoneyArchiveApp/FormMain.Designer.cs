@@ -30,10 +30,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.textSearch = new System.Windows.Forms.TextBox();
             this.gridTransactions = new System.Windows.Forms.DataGridView();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.cboListType = new System.Windows.Forms.ComboBox();
-            this.listSelection = new System.Windows.Forms.ListBox();
-            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.ChequeNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Payee = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,6 +40,12 @@
             this.Transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HasSplit = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.cboListType = new System.Windows.Forms.ComboBox();
+            this.listSelection = new System.Windows.Forms.ListBox();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.labelCount = new System.Windows.Forms.ToolStripStatusLabel();
             panel1 = new System.Windows.Forms.Panel();
             label1 = new System.Windows.Forms.Label();
             panel1.SuspendLayout();
@@ -52,10 +54,12 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            panel1.Controls.Add(this.statusStrip1);
             panel1.Controls.Add(this.textSearch);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(this.gridTransactions);
@@ -108,59 +112,9 @@
             this.gridTransactions.ReadOnly = true;
             this.gridTransactions.RowHeadersVisible = false;
             this.gridTransactions.RowTemplate.Height = 25;
-            this.gridTransactions.Size = new System.Drawing.Size(673, 421);
+            this.gridTransactions.Size = new System.Drawing.Size(673, 396);
             this.gridTransactions.TabIndex = 0;
             this.gridTransactions.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.gridTransactions_CellToolTipTextNeeded);
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.cboListType);
-            this.splitContainer1.Panel1.Controls.Add(this.listSelection);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
-            this.splitContainer1.SplitterDistance = 123;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // cboListType
-            // 
-            this.cboListType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboListType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboListType.FormattingEnabled = true;
-            this.cboListType.Location = new System.Drawing.Point(3, 5);
-            this.cboListType.Name = "cboListType";
-            this.cboListType.Size = new System.Drawing.Size(118, 23);
-            this.cboListType.TabIndex = 1;
-            this.cboListType.SelectedIndexChanged += new System.EventHandler(this.cboListType_SelectedIndexChanged);
-            // 
-            // listSelection
-            // 
-            this.listSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listSelection.FormattingEnabled = true;
-            this.listSelection.IntegralHeight = false;
-            this.listSelection.ItemHeight = 15;
-            this.listSelection.Location = new System.Drawing.Point(0, 31);
-            this.listSelection.Name = "listSelection";
-            this.listSelection.Size = new System.Drawing.Size(123, 419);
-            this.listSelection.TabIndex = 0;
-            this.listSelection.SelectedIndexChanged += new System.EventHandler(this.listSelection_SelectedIndexChanged);
-            // 
-            // dlgFolder
-            // 
-            this.dlgFolder.Description = "Select the Qif Folder";
-            this.dlgFolder.ShowNewFolderButton = false;
-            this.dlgFolder.UseDescriptionForTitle = true;
             // 
             // ChequeNumber
             // 
@@ -240,6 +194,71 @@
             this.HasSplit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.HasSplit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.cboListType);
+            this.splitContainer1.Panel1.Controls.Add(this.listSelection);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(panel1);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
+            this.splitContainer1.SplitterDistance = 123;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // cboListType
+            // 
+            this.cboListType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboListType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboListType.FormattingEnabled = true;
+            this.cboListType.Location = new System.Drawing.Point(3, 5);
+            this.cboListType.Name = "cboListType";
+            this.cboListType.Size = new System.Drawing.Size(118, 23);
+            this.cboListType.TabIndex = 1;
+            this.cboListType.SelectedIndexChanged += new System.EventHandler(this.cboListType_SelectedIndexChanged);
+            // 
+            // listSelection
+            // 
+            this.listSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listSelection.FormattingEnabled = true;
+            this.listSelection.IntegralHeight = false;
+            this.listSelection.ItemHeight = 15;
+            this.listSelection.Location = new System.Drawing.Point(0, 31);
+            this.listSelection.Name = "listSelection";
+            this.listSelection.Size = new System.Drawing.Size(123, 419);
+            this.listSelection.TabIndex = 0;
+            this.listSelection.SelectedIndexChanged += new System.EventHandler(this.listSelection_SelectedIndexChanged);
+            // 
+            // dlgFolder
+            // 
+            this.dlgFolder.Description = "Select the Qif Folder";
+            this.dlgFolder.ShowNewFolderButton = false;
+            this.dlgFolder.UseDescriptionForTitle = true;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.labelCount});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(673, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // labelCount
+            // 
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(0, 17);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -255,6 +274,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -277,5 +298,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Transfer;
         private System.Windows.Forms.DataGridViewTextBoxColumn Memo;
         private System.Windows.Forms.DataGridViewCheckBoxColumn HasSplit;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel labelCount;
     }
 }

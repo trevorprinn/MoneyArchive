@@ -103,6 +103,7 @@ namespace MoneyArchiveApp {
             var cursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
             try {
+                labelCount.Text = null;
                 gridTransactions.DataSource = null;
                 _currentTransactions = null;
                 textSearch.Text = null;
@@ -114,6 +115,7 @@ namespace MoneyArchiveApp {
                 gridTransactions.DataSource = _currentTransactions;
                 gridTransactions.AutoResizeColumns();
                 gridTransactions.Focus();
+                labelCount.Text = $"{_currentTransactions.Length} Transaction{(_currentTransactions.Length == 1 ? "" : "s")}";
             } finally {
                 Cursor.Current = cursor;
             }
@@ -135,8 +137,11 @@ namespace MoneyArchiveApp {
             var text = textSearch.Text?.ToLower();
             if (string.IsNullOrEmpty(text)) {
                 gridTransactions.DataSource = _currentTransactions;
+                labelCount.Text = $"{_currentTransactions.Length} Transaction{(_currentTransactions.Length == 1 ? "" : "s")}";
             } else {
-                gridTransactions.DataSource = _currentTransactions.Where(t => t.ContainsText(selType, text)).ToArray();
+                var matches = _currentTransactions.Where(t => t.ContainsText(selType, text)).ToArray();
+                gridTransactions.DataSource = matches;
+                labelCount.Text = $"{_currentTransactions.Length} Transaction{(_currentTransactions.Length == 1 ? "" : "s")}, Matching: {matches.Length}";
             }
         }
 
