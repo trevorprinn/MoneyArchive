@@ -26,9 +26,9 @@
             System.Windows.Forms.Panel panel1;
             System.Windows.Forms.StatusStrip statusStrip1;
             System.Windows.Forms.Label label1;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.textSearch = new System.Windows.Forms.TextBox();
             this.gridTransactions = new System.Windows.Forms.DataGridView();
@@ -137,13 +137,14 @@
             this.gridTransactions.RowTemplate.Height = 25;
             this.gridTransactions.Size = new System.Drawing.Size(673, 372);
             this.gridTransactions.TabIndex = 0;
+            this.gridTransactions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridTransactions_CellDoubleClick);
             this.gridTransactions.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.gridTransactions_CellToolTipTextNeeded);
             // 
             // ChequeNumber
             // 
             this.ChequeNumber.DataPropertyName = "ChequeNumber";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.ChequeNumber.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.ChequeNumber.DefaultCellStyle = dataGridViewCellStyle4;
             this.ChequeNumber.HeaderText = "Cheque";
             this.ChequeNumber.Name = "ChequeNumber";
             this.ChequeNumber.ReadOnly = true;
@@ -172,8 +173,8 @@
             // Amount
             // 
             this.Amount.DataPropertyName = "Amount";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Amount.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Amount.DefaultCellStyle = dataGridViewCellStyle5;
             this.Amount.HeaderText = "Amount";
             this.Amount.Name = "Amount";
             this.Amount.ReadOnly = true;
@@ -181,8 +182,8 @@
             // RunningTotal
             // 
             this.RunningTotal.DataPropertyName = "RunningTotal";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.RunningTotal.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.RunningTotal.DefaultCellStyle = dataGridViewCellStyle6;
             this.RunningTotal.HeaderText = "Total";
             this.RunningTotal.Name = "RunningTotal";
             this.RunningTotal.ReadOnly = true;
@@ -290,14 +291,14 @@
             // menuFileOpen
             // 
             this.menuFileOpen.Name = "menuFileOpen";
-            this.menuFileOpen.Size = new System.Drawing.Size(180, 22);
+            this.menuFileOpen.Size = new System.Drawing.Size(112, 22);
             this.menuFileOpen.Text = "&Open...";
             this.menuFileOpen.Click += new System.EventHandler(this.menuFileOpen_Click);
             // 
             // menuFileExit
             // 
             this.menuFileExit.Name = "menuFileExit";
-            this.menuFileExit.Size = new System.Drawing.Size(180, 22);
+            this.menuFileExit.Size = new System.Drawing.Size(112, 22);
             this.menuFileExit.Text = "E&xit";
             this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
             // 
