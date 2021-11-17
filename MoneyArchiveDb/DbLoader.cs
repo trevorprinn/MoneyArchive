@@ -82,7 +82,7 @@ namespace MoneyArchiveDb {
 		}
 
 		public static ArchiveDb Load(params string[] qifFilenames) {
-			var qifs = qifFilenames.Select(f => QifFile.Load(f)).ToArray();
+			var qifs = qifFilenames.Select(f => QifFile.Load(f)).Where(f => f.Type != "Invst").ToArray();
 			return Load(qifs);
 		}
 

@@ -10,6 +10,8 @@ namespace MoneyArchiveDb.QifImport {
 
         private QifFile() { }
 
+        public string Type { get; private set; }
+
         public QifTransaction[] Transactions { get; private set; }
         public string AccountName { get; private set; }
 
@@ -17,9 +19,10 @@ namespace MoneyArchiveDb.QifImport {
             var file = new QifFile {
                 AccountName = accountName
             };
-            // Ignore the first line
-            _ = qifReader.ReadLine();
+            var header = qifReader.ReadLine();
+            file.Type = header[6..].Trim();
             List<QifTransaction> trans = new();
+            if (file.Type == "Invst") return file;
             while (true) {
                 var record = new QifRecord(qifReader);
                 if (record.IsEmpty) break;
