@@ -185,7 +185,7 @@ namespace MoneyArchiveApp {
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
             using var f = new FormAbout();
-            f.ShowDialog();
+            f.ShowDialog(this);
         }
 
         private void gridTransactions_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
